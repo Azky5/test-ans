@@ -1,5 +1,6 @@
 package com.tecforte.blog.web.rest;
 
+import com.tecforte.blog.domain.enumeration.Emoji;
 import com.tecforte.blog.service.BlogService;
 import com.tecforte.blog.web.rest.errors.BadRequestAlertException;
 import com.tecforte.blog.service.dto.BlogDTO;
@@ -51,6 +52,11 @@ public class BlogResource {
         log.debug("REST request to save Blog : {}", blogDTO);
         if (blogDTO.getId() != null) {
             throw new BadRequestAlertException("A new blog cannot already have an ID", ENTITY_NAME, "idexists");
+        }
+        if(blogDTO.isPositive()!= null)
+        {
+            if(Emoji.WOW == null || Emoji.LIKE == null || Emoji.HAHA == null)
+                throw new BadRequestAlertException("Invalid Emoji", ENTITY_NAME, "invalidemoji");
         }
         BlogDTO result = blogService.save(blogDTO);
         return ResponseEntity.created(new URI("/api/blogs/" + result.getId()))
